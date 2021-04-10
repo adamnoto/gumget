@@ -24,9 +24,13 @@ interface IGumget {
   init: (config: GumgetConfig) => void
 
   /**
-   * This function will scan links that can be turned into Gumget links
-   * which will open the content inside of an IFrame, without requiring a
-   * page load
+   * Transform every found links on the page that can be turned into
+   * Gumget links
+   */
+  transform: () => void,
+
+  /**
+   * Scan all anchor links in teh DOM that can be turned into Gumget links
    */
   scanLinks: () => HTMLAnchorElement[]
 }
@@ -42,7 +46,7 @@ const Widget: IGumget = {
       this.config.domains = ["gumroad.com/l"]
     }
 
-    this.scanLinks()
+    this.transform()
   },
 
   scanLinks() {
@@ -66,6 +70,15 @@ const Widget: IGumget = {
     }
 
     return eligibleLinks
+  },
+
+  transform() {
+    this.scanLinks().forEach(link => {
+      link.onclick = (e) => {
+        e.preventDefault()
+        alert("Hey, I am clicked")
+      }
+    })
   }
 }
 
