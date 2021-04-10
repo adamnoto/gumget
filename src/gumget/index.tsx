@@ -98,7 +98,7 @@ const Widget: IGumget = {
 
     this.iframeContainer = document.createElement("div")
     document.body.appendChild(this.iframeContainer)
-    render(<Frame/>, this.iframeContainer)
+    render(<Frame url={url}/>, this.iframeContainer)
   }
 }
 
