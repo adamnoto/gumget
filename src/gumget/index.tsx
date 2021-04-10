@@ -39,6 +39,11 @@ interface IGumget {
   scanLinks: () => HTMLAnchorElement[]
 
   /**
+   * Remove Iframe from the DOM
+   */
+  removeAnyOpenedFrame: () => void
+
+  /**
    * Open a given URL in a Gumget Iframe. If such Iframe is already present
    * in the document, Gumget will close/remove previous Iframe from the DOM
    */
@@ -106,10 +111,14 @@ const Widget: IGumget = {
     })
   },
 
-  openFrame(url: string, isWanted: boolean) {
+  removeAnyOpenedFrame() {
     if (this.iframeContainer) {
       this.iframeContainer.parentNode?.removeChild(this.iframeContainer)
     }
+  },
+
+  openFrame(url: string, isWanted: boolean) {
+    this.removeAnyOpenedFrame()
 
     this.iframeContainer = document.createElement("div")
     document.body.appendChild(this.iframeContainer)
@@ -117,6 +126,16 @@ const Widget: IGumget = {
       <Frame url={url} isWanted={isWanted} />,
       this.iframeContainer
     )
+
+    // ensure user can close the frame when pressing escape button
+    const frameCloser = (ev: KeyboardEvent) => {
+      console.log("CLOSING")
+      if (ev.key === "Escape" || ev.keyCode === 27) {
+        this.removeAnyOpenedFrame()
+        document.removeEventListener("keydown", frameCloser) // preventing memory leak
+      }
+    }
+    document.addEventListener("keydown", frameCloser)
   },
 
   addStyles() {
