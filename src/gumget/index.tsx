@@ -42,7 +42,7 @@ interface IGumget {
    * Open a given URL in a Gumget Iframe. If such Iframe is already present
    * in the document, Gumget will close/remove previous Iframe from the DOM
    */
-  openFrame: (url: string) => void
+  openFrame: (url: string, isWanted: boolean) => void
 
   /**
    * Add CSS for styling the Gumget links
@@ -99,19 +99,24 @@ const Widget: IGumget = {
 
       link.onclick = (e) => {
         e.preventDefault()
-        this.openFrame(link.href)
+
+        const isWanted = !!link.getAttribute("data-gumroad-wanted")
+        this.openFrame(link.href, isWanted)
       }
     })
   },
 
-  openFrame(url: string) {
+  openFrame(url: string, isWanted: boolean) {
     if (this.iframeContainer) {
       this.iframeContainer.parentNode?.removeChild(this.iframeContainer)
     }
 
     this.iframeContainer = document.createElement("div")
     document.body.appendChild(this.iframeContainer)
-    render(<Frame url={url}/>, this.iframeContainer)
+    render(
+      <Frame url={url} isWanted={isWanted} />,
+      this.iframeContainer
+    )
   },
 
   addStyles() {
