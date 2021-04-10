@@ -6,7 +6,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const config = {
   mode: isProd ? 'production' : 'development',
   entry: {
-    Gumget: ['./src/gumget/index.ts']
+    Gumget: ['./src/gumget/index.tsx']
   },
   output: {
     filename: '[name].js',

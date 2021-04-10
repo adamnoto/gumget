@@ -1,3 +1,7 @@
+import * as React from "react"
+import { render } from "react-dom"
+import Frame from "./Frame"
+
 const isDev = process.env.NODE_ENV === 'development';
 
 /**
@@ -13,7 +17,7 @@ interface GumgetConfig {
 
 interface IGumget {
   config: GumgetConfig | null
-  iframe: HTMLIFrameElement | null
+  iframeContainer: HTMLDivElement | null
 
   /**
    * Used to initialize and setup Gumget. After the initial setup
@@ -27,17 +31,23 @@ interface IGumget {
    * Transform every found links on the page that can be turned into
    * Gumget links
    */
-  transform: () => void,
+  transform: () => void
 
   /**
    * Scan all anchor links in teh DOM that can be turned into Gumget links
    */
   scanLinks: () => HTMLAnchorElement[]
+
+  /**
+   * Open a given URL in a Gumget Iframe. If such Iframe is already present
+   * in the document, Gumget will close/remove previous Iframe from the DOM
+   */
+  openFrame: (url: string) => void
 }
 
 const Widget: IGumget = {
   config: null,
-  iframe: null,
+  iframeContainer: null,
 
   init(config: GumgetConfig) {
     this.config = Object.assign({}, config)
@@ -76,9 +86,19 @@ const Widget: IGumget = {
     this.scanLinks().forEach(link => {
       link.onclick = (e) => {
         e.preventDefault()
-        alert("Hey, I am clicked")
+        this.openFrame(link.href)
       }
     })
+  },
+
+  openFrame(url: string) {
+    if (this.iframeContainer) {
+      this.iframeContainer.parentNode?.removeChild(this.iframeContainer)
+    }
+
+    this.iframeContainer = document.createElement("div")
+    document.body.appendChild(this.iframeContainer)
+    render(<Frame/>, this.iframeContainer)
   }
 }
 
