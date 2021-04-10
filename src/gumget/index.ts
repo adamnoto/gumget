@@ -1,3 +1,5 @@
+const isDev = process.env.NODE_ENV === 'development';
+
 /**
  * All configurations for the Gumget
  */
@@ -59,7 +61,10 @@ const Widget: IGumget = {
       })
     })
 
-    console.log(eligibleLinks)
+    if (isDev) {
+      console.info("Following links are going to be transformed by Gumget", eligibleLinks)
+    }
+
     return eligibleLinks
   }
 }
