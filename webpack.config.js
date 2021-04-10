@@ -16,12 +16,12 @@ const config = {
     libraryExport: 'default'
   },
   resolve: {
-    extensions: ['.js', '.ts'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   module: {
     rules: [
       {
-        test: /\.ts$/,
+        test: /\.tsx?$/,
         use: 'babel-loader',
         exclude: /node_modules/,
       },
