@@ -43,6 +43,11 @@ interface IGumget {
    * in the document, Gumget will close/remove previous Iframe from the DOM
    */
   openFrame: (url: string) => void
+
+  /**
+   * Add CSS for styling the Gumget links
+   */
+  addStyles: () => void
 }
 
 const Widget: IGumget = {
@@ -56,6 +61,7 @@ const Widget: IGumget = {
       this.config.domains = ["gumroad.com/l"]
     }
 
+    this.addStyles()
     this.transform()
   },
 
@@ -83,7 +89,14 @@ const Widget: IGumget = {
   },
 
   transform() {
+
     this.scanLinks().forEach(link => {
+      const gumroadLogo = document.createElement("span")
+      gumroadLogo.setAttribute("class", "gumroad-button-logo")
+      link.prepend(gumroadLogo)
+
+      link.setAttribute("class", "gumroad-button")
+
       link.onclick = (e) => {
         e.preventDefault()
         this.openFrame(link.href)
@@ -99,6 +112,45 @@ const Widget: IGumget = {
     this.iframeContainer = document.createElement("div")
     document.body.appendChild(this.iframeContainer)
     render(<Frame url={url}/>, this.iframeContainer)
+  },
+
+  addStyles() {
+    const style = document.createElement("style")
+    style.innerHTML = `
+      a.gumroad-button {
+        background-color: white !important;
+        background-image: url("https://gumroad.com/button/button_bar.jpg") !important;
+        background-repeat: repeat-x !important;
+        border-radius: 4px !important;
+        box-shadow: rgba(0, 0, 0, 0.4) 0 0 2px !important;
+        color: #000 !important;
+        display: inline-block !important;
+        font-family: -apple-system, ".SFNSDisplay-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+        font-size: 16px !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        line-height: 50px !important;
+        padding: 0 15px !important;
+        text-shadow: none !important;
+        text-decoration: none !important;
+      }
+
+      a.gumroad-button:hover {
+        box-shadow: 0 2px 3px rgba(0,0,0,.3)!important;
+      }
+
+      .gumroad-button-logo {
+        background-image: url("https://gumroad.com/button/button_logo.png") !important;
+        background-size: cover !important;
+        height: 17px !important;
+        width: 16px !important;
+        display: inline-block !important;
+        margin-bottom: -3px !important;
+        margin-right: 15px !important;
+      }
+    `
+
+    document.body.appendChild(style)
   }
 }
 
