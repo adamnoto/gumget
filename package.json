@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server",
-    "build": "cross-env NODE_ENV=production webpack",
-    "start": "serve public"
+    "build": "cross-env NODE_ENV=production webpack"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["Gumroad", "Gumget"],
+  "author": "Adam Notodikromo",
   "license": "MIT",
   "dependencies": {
     "react": "^16.13.1",
